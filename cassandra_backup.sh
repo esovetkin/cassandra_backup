@@ -135,24 +135,24 @@ function parse_args {
 
 function list_tables {
     keyspace="$1"
-    cqlsh "${host}" -e "USE ${keyspace}; DESCRIBE tables;" | xargs
+    cqlsh "${host}" -e "USE ${keyspace}; DESCRIBE tables;" | xargs || exit 1
 }
 
 
 function list_keyspaces {
-    cqlsh "${host}" -e "DESCRIBE keyspaces;" | xargs
+    cqlsh "${host}" -e "DESCRIBE keyspaces;" | xargs || exit 1
 }
 
 
 function get_create {
     keyspace="$1"
     ofn="$2"
-    cqlsh "${host}" -e "DESCRIBE keyspace ${keyspace};" > "${ofn}"
+    cqlsh "${host}" -e "DESCRIBE keyspace ${keyspace};" > "${ofn}" || exit 1
 }
 
 
 function call_create {
-    cqlsh "${host}" -f "$1"
+    cqlsh "${host}" -f "$1" || exit 1
 }
 
 
@@ -168,7 +168,7 @@ function copy_to {
         --request-timeout=${request_timeout} \
         --connect-timeout=${connect_timeout} \
         -e "${cmd}" \
-        "${host}" | gzip > "${ofn}"
+        "${host}" | gzip > "${ofn}" || exit 1
 }
 
 
@@ -186,7 +186,7 @@ function copy_from {
             --request-timeout=${request_timeout} \
             --connect-timeout=${connect_timeout} \
             -e "${cmd}" \
-            "${host}"
+            "${host}" || exit 1
 
 }
 

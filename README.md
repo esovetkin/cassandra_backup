@@ -47,3 +47,11 @@ something like this:
     xargs -0 sed sed -i "s|'replication_factor': '2'|'replication_factor': '3'|g"
 > ./cassandra_backup.sh restore --host=host2 --dumps=./dumps_new
 ```
+
+## Backup and prune older backups
+
+The `dobackup.sh` script can be used to perform periodic backups: it
+calls `./cassandra_backup.sh` and purges older backups. It is executed
+in the git root directory.
+
+Use it on your own risk.
