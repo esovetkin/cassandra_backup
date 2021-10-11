@@ -43,7 +43,7 @@ If you would like to adjust the replication strategy, consider using
 something like this:
 ```
 > cp -rl dumps dumps_new
-> find -name '*.cqlsh' -print0 | \
+> find dumps_new -name '*.cqlsh' -print0 | \
     xargs -0 sed sed -i "s|'replication_factor': '2'|'replication_factor': '3'|g"
 > ./cassandra_backup.sh restore --host=host2 --dumps=./dumps_new
 ```
