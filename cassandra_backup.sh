@@ -16,6 +16,7 @@ function set_defaults {
     chunksize=2
     numprocesses=1
     maxattempts=20
+    overwriteexisting="yes"
 }
 
 
@@ -52,6 +53,11 @@ function print_help {
     echo "                    --chunksize=${chunksize}"
     echo "                    --numprocesses=${numprocesses}"
     echo "                    --maxattempts=${maxattempts}"
+    echo
+    echo "  --overwriteexisting"
+    echo "                    on 'restore' do not exit if tables exists"
+    echo "                    hence entries will be overwritten"
+    echo "                    Default: \"${overwriteexisting}\""
     echo
     echo "  list_keyspaces    list available keyspaces"
     echo
@@ -112,6 +118,10 @@ function parse_args {
                 maxattempts="${i#*=}"
                 shift
                 ;;
+            --overwriteexisting=*)
+                overwriteexisting="${i#*=}"
+                shift
+                ;;
             backup)
                 what="backup"
                 ;;
@@ -152,7 +162,13 @@ function get_create {
 
 
 function call_create {
-    cqlsh "${host}" -f "$1" || exit 1
+    if cqlsh "${host}" -f "$1"
+    then
+        if [ "${overwriteexisting}" != "yes" ]
+        then
+            exit 1
+        fi
+    fi
 }
 
 
